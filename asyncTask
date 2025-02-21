@@ -1,0 +1,27 @@
+function asyncTask(id) {
+    return new Promise((resolve, reject) => {
+        const delay = Math.floor(Math.random() * 2000) + 500;
+        setTimeout(() => {
+            if (Math.random() > 0.2) {
+                resolve(`任务 ${id} 成功，延时 ${delay} 毫秒`);
+            } else {
+                reject(`任务 ${id} 失败`);
+            }
+        }, delay);
+    });
+}
+
+async function runTasks() {
+    const tasks = [];
+    for (let i = 1; i <= 5; i++) {
+        tasks.push(asyncTask(i));
+    }
+    try {
+        const results = await Promise.all(tasks);
+        console.log("所有任务成功:", results);
+    } catch (error) {
+        console.error("至少有一个任务失败:", error);
+    }
+}
+
+runTasks();
