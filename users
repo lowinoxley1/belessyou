@@ -1,0 +1,12 @@
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);
+
+INSERT INTO users (username, email, password) VALUES 
+('Alice', 'alice@example.com', 'hashed_password'),
+('Bob', 'bob@example.com', 'hashed_password');
+
+SELECT * FROM users WHERE username = 'Alice';
