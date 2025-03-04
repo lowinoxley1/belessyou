@@ -1,0 +1,17 @@
+pragma solidity ^0.8.0;
+
+contract Parent {
+    string public parentMessage = "来自父合约的消息";
+
+    function getParentMessage() public view returns (string memory) {
+        return parentMessage;
+    }
+}
+
+contract Child is Parent {
+    string public childMessage = "来自子合约的消息";
+
+    function getChildMessage() public view returns (string memory) {
+        return childMessage;
+    }
+}
