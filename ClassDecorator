@@ -1,0 +1,19 @@
+# 定义类装饰器
+class ClassDecorator:
+    def __init__(self, cls):
+        self.cls = cls
+
+    def __call__(self, *args, **kwargs):
+        print(f"创建实例: {self.cls.__name__}")
+        instance = self.cls(*args, **kwargs)
+        return instance
+
+# 使用类装饰器
+@ClassDecorator
+class MyClass:
+    def __init__(self, value):
+        self.value = value
+
+# 测试类装饰器
+obj = MyClass(10)
+print(obj.value)  # 输出: 10
