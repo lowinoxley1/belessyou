@@ -1,0 +1,63 @@
+import heapq
+
+class Node:
+    def __init__(self, position, parent=None):
+        self.position = position
+        self.parent = parent
+        self.g = 0  # 从起点到当前节点的代价
+        self.h = 0  # 估算到终点的代价
+        self.f = 0  # 总代价 f = g + h
+
+    def __lt__(self, other):
+        return self.f < other.f
+
+def heuristic(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+def astar(maze, start, end):
+    open_list = []
+    closed_set = set()
+    start_node = Node(start)
+    end_node = Node(end)
+    
+    heapq.heappush(open_list, start_node)
+    
+    while open_list:
+        current_node = heapq.heappop(open_list)
+        closed_set.add(current_node.position)
+        
+        if current_node.position == end:
+            path = []
+            while current_node:
+                path.append(current_node.position)
+                current_node = current_node.parent
+            return path[::-1]
+        
+        x, y = current_node.position
+        for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            neighbor = (x + dx, y + dy)
+            
+            if neighbor in closed_set or maze[neighbor[0]][neighbor[1]] == 1:
+                continue
+            
+            neighbor_node = Node(neighbor, current_node)
+            neighbor_node.g = current_node.g + 1
+            neighbor_node.h = heuristic(neighbor, end)
+            neighbor_node.f = neighbor_node.g + neighbor_node.h
+            
+            heapq.heappush(open_list, neighbor_node)
+    
+    return None  # 无路径
+
+maze = [
+    [0, 0, 0, 0, 1],
+    [1, 1, 0, 1, 0],
+    [0, 0, 0, 0, 0],
+    [1, 0, 1, 1, 0],
+    [0, 0, 0, 0, 0]
+]
+
+start = (0, 0)
+end = (4, 4)
+path = astar(maze, start, end)
+print(path)
