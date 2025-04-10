@@ -1,0 +1,42 @@
+#include <iostream>
+#include <queue>
+#include <unordered_map>
+#include <vector>
+
+struct Node {
+    int x, y, g, h;
+    bool operator<(const Node& other) const {
+        return g + h > other.g + other.h;
+    }
+};
+
+int heuristic(int x1, int y1, int x2, int y2) {
+    return abs(x1 - x2) + abs(y1 - y2);
+}
+
+void AStar(int sx, int sy, int ex, int ey) {
+    std::priority_queue<Node> open;
+    std::unordered_map<int, int> visited;
+
+    open.push({sx, sy, 0, heuristic(sx, sy, ex, ey)});
+
+    while (!open.empty()) {
+        Node curr = open.top(); open.pop();
+        int key = curr.x * 1000 + curr.y;
+        if (visited.count(key)) continue;
+        visited[key] = curr.g;
+
+        if (curr.x == ex && curr.y == ey) {
+            std::cout << "Path found with cost: " << curr.g << "\n";
+            return;
+        }
+
+        for (auto [dx, dy] : std::vector<std::pair<int, int>>{{1,0},{-1,0},{0,1},{0,-1}}) {
+            int nx = curr.x + dx, ny = curr.y + dy;
+            if (nx >= 0 && ny >= 0) {
+                open.push({nx, ny, curr.g + 1, heuristic(nx, ny, ex, ey)});
+            }
+        }
+    }
+    std::cout << "No path found.\n";
+}
