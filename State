@@ -1,0 +1,24 @@
+enum State {
+    Start,
+    Running,
+    End,
+}
+
+struct Machine {
+    state: State,
+}
+
+impl Machine {
+    fn new() -> Self {
+        Machine { state: State::Start }
+    }
+
+    fn transition(&mut self) {
+        self.state = match self.state {
+            State::Start => State::Running,
+            State::Running => State::End,
+            State::End => State::Start,
+        };
+        println!("State changed to: {:?}", self.state);
+    }
+}
