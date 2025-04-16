@@ -1,0 +1,39 @@
+import numpy as np
+
+class DenseLayer:
+    def __init__(self, in_size, out_size):
+        self.weights = np.random.randn(in_size, out_size)
+        self.bias = np.zeros((1, out_size))
+
+    def forward(self, x):
+        self.input = x
+        return np.dot(x, self.weights) + self.bias
+
+    def backward(self, grad_output, lr=0.01):
+        grad_input = np.dot(grad_output, self.weights.T)
+        grad_weights = np.dot(self.input.T, grad_output)
+        self.weights -= lr * grad_weights
+        self.bias -= lr * np.sum(grad_output, axis=0)
+        return grad_input
+
+def relu(x): return np.maximum(0, x)
+def relu_deriv(x): return (x > 0).astype(float)
+
+# 手动构建并训练一个三层网络
+x = np.random.randn(100, 3)
+y = np.random.randn(100, 1)
+
+l1 = DenseLayer(3, 5)
+l2 = DenseLayer(5, 1)
+
+for epoch in range(100):
+    out1 = relu(l1.forward(x))
+    out2 = l2.forward(out1)
+    loss = ((out2 - y)**2).mean()
+
+    grad = 2 * (out2 - y) / y.shape[0]
+    grad = l2.backward(grad)
+    grad = l1.backward(grad * relu_deriv(out1))
+
+    if epoch % 10 == 0:
+        print(f"Epoch {epoch}, Loss: {loss:.4f}")
